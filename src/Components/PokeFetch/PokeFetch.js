@@ -9,7 +9,22 @@ class PokeFetch extends Component {
       pokeInfo: '',
       pokeSprite: '',
       pokeName: '',
+      seconds: null
     }
+  }
+
+  timer() {
+    this.myInterval = setInterval(() => {
+      const { seconds } = this.state
+      if (seconds > 0) {
+        this.setState(prevState => ({
+        seconds: prevState.seconds - 1
+      }))
+      console.log(seconds)
+      } else {
+        clearInterval(this.myInterval);
+      }
+    }, 1000)
   }
 
   fetchPokemon() {
@@ -30,16 +45,41 @@ class PokeFetch extends Component {
   }
 
   render() {
-    return (
+    const { seconds } = this.state;
+    //Reveal
+    if (seconds === 0) {
+      return (
       <div className={'wrapper'}>
-        <button className={'start'} onClick={() => this.fetchPokemon()}>Start!</button>
-        <h1 className={'timer'} >Timer Display</h1>
+        <button className={'start'} onClick={() => {
+          this.setState({seconds: 3})
+          this.fetchPokemon();
+          this.timer()
+          }}>Start!
+        </button>
+        <h1 className={'timer'} >Times Up!</h1>
         <div className={'pokeWrap'}>
-          <img className={'pokeImg'} src={this.state.pokeSprite} />
+          <img className={'pokeImg'} id={'revealImg'} src={this.state.pokeSprite} alt='' />
           <h1 className={'pokeName'}>{this.state.pokeName}</h1>
         </div>
       </div>
-    )
+      )
+    } else {
+      //Hidden
+      return(
+        <div className={'wrapper'}>
+        <button className={'start'} onClick={() => {
+          this.setState({seconds: 3})
+          this.fetchPokemon();
+          this.timer()
+          }}>Start!
+        </button>
+        <h1 className={'timer'} >{seconds}</h1>
+        <div className={'pokeWrap'}>
+          <img className={'pokeImg'} id={'hiddenImg'} src={this.state.pokeSprite} alt='' />
+        </div>
+      </div>
+      )
+    }
   }
 }
 
